@@ -1,119 +1,39 @@
-body {
-  margin: 0;
-  padding: 20px;
-  font: Baskerville, "Palatino Linotype", Palatino, "Century Schoolbook L", "Times New Roman", "serif";
-background-color: beige;
-}
-
-h1 {
-  text-align: center ;
-	
-	
-}
-
-/*
-Source - https://stackoverflow.com/a/4919231
-Posted by Kyle, modified by community. See post 'Timeline' for change history
-Retrieved 2026-09-20, License - CC BY-SA 4.0
-*/
-
-.strokeme {
-  color: #B08D3C;
-  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-}
-
-#drop-area {
-  width: 300px;
-  height: 200px;
-  margin: 20px auto;
-  text-align: center;
-  line-height: 200px;
-  border: 2px dashed #ccc;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-	
-}
-
-#drop-area.drag-over {
-  background-color: lemonchiffon;
-  color: azure;
-	text-color: azure;
-}
-
-#preview-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 15px;
-  margin-top: 20px;
-}
-
-.preview-image {
-  /* Slika ostaje u svojoj prirodnoj veličini ako je manja */
-  width: auto;
-  height: auto;
-  
-  /* Ako je slika veća od ekrana/kontejnera, smanjuje se za 20% (ostaje na 80%) */
-  max-width: 50%;
-  
-  /* Održava prirodan omjer stranica pri smanjivanju */
-  object-fit: contain;
-  
-  /* Spriječava Flexbox da dodatno stišće sliku mimo max-width pravila */
-  flex-shrink: 0; 
-  
-  margin: 10px;
-  border: 1px solid #ddd;
-	/* Osnovno pravilo za pravilan izračun širina */
-*, *::before, *::after {
+* {
   box-sizing: border-box;
 }
 
-/* Osiguraj da se slike i mediji ne prelijevaju izvan ekrana */
-img, video, canvas, svg {
-  max-width: 100%;
+body {
+  margin: 0;
+  padding: 15px;
+  font-family: Baskerville, "Palatino Linotype", Palatino, "Century Schoolbook L", "Times New Roman", serif;
+  background-color: beige;
+}
+
+/* Zaglavlje s logotipom i naslovom */
+.header-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.header-logo {
+  width: 180px;
+  max-width: 80%;
   height: auto;
-  display: block;
 }
 
-/* Prilagodbe za ekrane manje od 768px (mobiteli) */
-@media (max-width: 768px) {
-  body {
-    padding: 12px;
-    font-size: 16px; /* Sprječava automatski zoom na iOS uređajima */
-    line-height: 1.5;
-  }
-
-  /* Pretvaranje grid i flex kontejnera u jedan stupac */
-  .container, .grid, .row, .flex-container {
-    display: flex;
-    flex-direction: column;
-    width: 100% !important;
-    padding: 0 !important;
-  }
-
-  /* Prilagodba fontova za manje ekrane */
-  h1 { font-size: 1.8rem !important; }
-  h2 { font-size: 1.5rem !important; }
-  h3 { font-size: 1.2rem !important; }
-
-  /* Tablice – omogućuje vodoravno skrolanje umjesto lomljenja izgleda */
-  table {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-    width: 100%;
-  }
-
-  /* Gumbi i primarni elementi za dodir (min 44px za prst) */
-  button, .btn, a.button {
-    width: 100%;
-    min-height: 44px;
-    padding: 12px;
-    font-size: 1rem;
-    text-align: center;
-  }
+h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  line-height: 1.3;
 }
-}
-}
+
+.strokeme {
+  color: #B08D3C;
+  text-shadow: -1px -1px 0 #000, 1px -1pxMožeš li, molim te, **priložiti kod** i ukratko napisati što bi taj kod trebao raditi te s kojim se problemom ili greškom susrećeš? 
+
+Čim podijeliš kod, pregledat ću ga i napisati ti kompletno popravljenu verziju s objašnjenjem što je bilo pogrešno.
