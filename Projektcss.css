@@ -34,6 +34,44 @@ h1 {
 
 .strokeme {
   color: #B08D3C;
-  text-shadow: -1px -1px 0 #000, 1px -1pxMožeš li, molim te, **priložiti kod** i ukratko napisati što bi taj kod trebao raditi te s kojim se problemom ili greškom susrećeš? 
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
 
-Čim podijeliš kod, pregledat ću ga i napisati ti kompletno popravljenu verziju s objašnjenjem što je bilo pogrešno.
+/* Okvir za spuštanje slika */
+#drop-area {
+  width: 100%;
+  max-width: 400px;
+  height: 180px;
+  margin: 0 auto 20px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border: 2px dashed #ccc;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  padding: 10px;
+}
+
+#drop-area.drag-over {
+  background-color: lemonchiffon;
+  color: azure;
+}
+
+/* Kontejner za galeriju */
+#preview-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.preview-image {
+  height: auto;
+  max-width: 100%; /* Sprječava prelijevanje izvan ekrana mobitela */
+  flex-shrink: 0;
+  margin: 5px;
+  border: 1px solid #ddd;
+}
