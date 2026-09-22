@@ -65,5 +65,55 @@ Retrieved 2026-09-20, License - CC BY-SA 4.0
   
   margin: 10px;
   border: 1px solid #ddd;
+	/* Osnovno pravilo za pravilan izračun širina */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* Osiguraj da se slike i mediji ne prelijevaju izvan ekrana */
+img, video, canvas, svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Prilagodbe za ekrane manje od 768px (mobiteli) */
+@media (max-width: 768px) {
+  body {
+    padding: 12px;
+    font-size: 16px; /* Sprječava automatski zoom na iOS uređajima */
+    line-height: 1.5;
+  }
+
+  /* Pretvaranje grid i flex kontejnera u jedan stupac */
+  .container, .grid, .row, .flex-container {
+    display: flex;
+    flex-direction: column;
+    width: 100% !important;
+    padding: 0 !important;
+  }
+
+  /* Prilagodba fontova za manje ekrane */
+  h1 { font-size: 1.8rem !important; }
+  h2 { font-size: 1.5rem !important; }
+  h3 { font-size: 1.2rem !important; }
+
+  /* Tablice – omogućuje vodoravno skrolanje umjesto lomljenja izgleda */
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    width: 100%;
+  }
+
+  /* Gumbi i primarni elementi za dodir (min 44px za prst) */
+  button, .btn, a.button {
+    width: 100%;
+    min-height: 44px;
+    padding: 12px;
+    font-size: 1rem;
+    text-align: center;
+  }
+}
 }
 }
