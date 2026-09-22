@@ -3,25 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KETI I DOMI</title>
+  <title>SLIKE!!!</title>
   <link rel="stylesheet" href="Projektcss.css">
   
   <!-- Supabase JS CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-  <h1> <div class="strokeme"> KATARINA I DOMAGOJ <br> 25.09.2026.</div></h1>
-<h2> <img src="dk.png" style="float:left;width:210px;"></h2>
+
+  <header class="header-container">
+    <img src="dk.png" alt="DK Logo" class="header-logo">
+    <h1>
+      <div class="strokeme">
+        KATARINA I DOMAGOJ <br> 25.09.2026.
+      </div>
+    </h1>
+  </header>
 	
-<div id="drop-area">
-  Spusti sliku ovdje
-</div>
+  <div id="drop-area">
+    Spusti sliku ovdje ili klikni za odabir
+  </div>
   
   <input type="file" id="file-input" multiple accept="image/*" hidden>
   
   <div id="preview-container"></div>
 
   <script src="script.js"></script>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </body>
 </html>
