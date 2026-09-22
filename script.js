@@ -91,21 +91,6 @@ function displayImage(url) {
   const img = document.createElement('img');
   img.src = url;
   img.classList.add('preview-image');
-  
-  img.onload = () => {
-    // 80% prirodne veličine
-    const targetWidth = img.naturalWidth * 0.8;
-    
-    // Ako je 80% i dalje šire od ekrana mobitela, ogradi na maksimalno 90% širine ekrana
-    const maxWidthMobile = window.innerWidth * 0.9;
-    
-    if (targetWidth > maxWidthMobile) {
-      img.style.width = `${maxWidthMobile}px`;
-    } else {
-      img.style.width = `${targetWidth}px`;
-    }
-  };
-
   previewContainer.appendChild(img);
 }
 
