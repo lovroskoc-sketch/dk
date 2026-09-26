@@ -112,21 +112,40 @@ async function handleFiles(files) {
 function displayMedia(url, fileName = '') {
   const isVideo = /\.(mp4|mov|avi|mkv|webm|3gp|flv|wmv)$/i.test(fileName || url);
 
+  // Pretvaranje Google Drive URL-a u izravni prikaz
+  let directUrl = url;
+  if (url.includes('drive.google.com') || url.includes('googleusercontent.com')) {
+    // Izvlačenje ID-a datoteke ako je u standardnom Drive formatu
+    const match = url.match(/[-\w]{25,}/);
+    if (match) {
+      const fileId = match[0];
+      directUrl = `https://lh3.googleusercontent.com/d/${fileId}`;
+    }
+  }
+
   if (isVideo) {
     const video = document.createElement('video');
-    video.src = url;
+    video.src = directUrl;
     video.controls = true;
     video.playsInline = true;
     video.classList.add('preview-media');
     previewContainer.appendChild(video);
   } else {
     const img = document.createElement('img');
-    img.src = url;
+    img.src = directUrl;
     img.classList.add('preview-media');
+    
+    // Ako se slika ne uspije učitati preko CDN-a, probaj zamjenski link
+    img.onerror = () => {
+      const match = url.match(/[-\w]{25,}/);
+      if (match) {
+        img.src = `https://drive.google.com/thumbnail?id=${match[0]}&sz=w1000`;
+      }
+    };
+
     previewContainer.appendChild(img);
   }
 }
-
 // 5. Automatsko učitavanje spremljenih slika i videa s Google Drivea
 async function loadSavedImages() {
   try {
