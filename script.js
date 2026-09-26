@@ -1,9 +1,5 @@
-// Konfiguracija za Supabase
-const SUPABASE_URL = 'https://hypzuumvrjalyakdfdtp.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh5cHp1dW12cmphbHlha2RmZHRwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk2NzkyODcsImV4cCI6MjEwNTI1NTI4N30.nf7SCA8tVGlakxLrwlJ_ZJa38Nc590dTDiGF2KDu0Ls';
-
-// Inicijalizacija klijenta pod imenom supabaseClient (kako ne bi izbacivalo SyntaxError)
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// Google Apps Script Web App URL
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxkmer0Thzvrlsvkn0KOa-LsVDIdGcSmXUsCbnthvIYVZnxny3S6DDHHY40AvF9Cd9_/exec';
 
 const dropArea = document.getElementById('drop-area');
 const fileInput = document.getElementById('file-input');
@@ -59,7 +55,17 @@ if (fileInput) {
   });
 }
 
-// 4. Slanje slika i videa na Supabase
+// Pomoćna funkcija za pretvaranje datoteke u Base64 format
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = error => reject(error);
+    reader.readAsDataURL(file);
+  });
+}
+
+// 4. Slanje slika i videa na Google Drive
 async function handleFiles(files) {
   for (const file of files) {
     const isImage = file.type.startsWith('image/');
@@ -70,26 +76,35 @@ async function handleFiles(files) {
       continue;
     }
 
-    const fileName = `${Date.now()}_${file.name}`;
+    const originalText = dropArea.innerText;
+    dropArea.innerText = `Spremam ${file.name}...`;
 
-    const { data, error } = await supabaseClient.storage
-      .from('Slike')
-      .upload(fileName, file, {
-        contentType: file.type || (isVideo ? 'video/mp4' : 'image/jpeg'),
-        upsert: false
+    try {
+      const base64Data = await fileToBase64(file);
+      const payload = {
+        fileName: `${Date.now()}_${file.name}`,
+        mimeType: file.type || (isVideo ? 'video/mp4' : 'image/jpeg'),
+        base64: base64Data
+      };
+
+      const response = await fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify(payload)
       });
 
-    if (error) {
-      console.error('Supabase upload greška:', error);
-      alert('Greška s bazom: ' + error.message);
-      continue;
+      const result = await response.json();
+
+      if (result.status === 'success') {
+        displayMedia(result.fileUrl, file.name);
+      } else {
+        alert('Greška pri spremanju: ' + result.message);
+      }
+    } catch (err) {
+      console.error('Prijenos neuspješan:', err);
+      alert('Greška pri slanju datoteke na Google Drive.');
+    } finally {
+      dropArea.innerText = originalText;
     }
-
-    const { data: urlData } = supabaseClient.storage
-      .from('Slike')
-      .getPublicUrl(fileName);
-
-    displayMedia(urlData.publicUrl, file.name);
   }
 }
 
@@ -112,15 +127,19 @@ function displayMedia(url, fileName = '') {
   }
 }
 
-// 5. Automatsko učitavanje spremljenih slika i videa
+// 5. Automatsko učitavanje spremljenih slika i videa s Google Drivea
 async function loadSavedImages() {
-  const { data, error } = await supabaseClient.storage.from('Slike').list();
-  if (error || !data) return;
+  try {
+    const response = await fetch(GOOGLE_SCRIPT_URL);
+    const result = await response.json();
 
-  for (const file of data) {
-    if (file.name === '.emptyFolderPlaceholder') continue;
-    const { data: urlData } = supabaseClient.storage.from('Slike').getPublicUrl(file.name);
-    displayMedia(urlData.publicUrl, file.name);
+    if (result.status === 'success' && result.files) {
+      for (const file of result.files) {
+        displayMedia(file.url, file.name);
+      }
+    }
+  } catch (err) {
+    console.error('Učitavanje s Google Drivea nije uspjelo:', err);
   }
 }
 
