@@ -1,4 +1,4 @@
-// Ažurirani Google Apps Script Web App URL
+// Google Apps Script Web App URL
 const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbza0aBdwRot9YdGNpd42EuoRhj_jNjPiLXcN1X5AuXcJF-DB26ZUyXAG95XYy1zwM8/exec';
 
 const dropArea = document.getElementById('drop-area');
@@ -110,42 +110,34 @@ async function handleFiles(files) {
 
 // Prikaz slika ili videa ovisno o formatu
 function displayMedia(url, fileName = '') {
+  if (!previewContainer) return;
+
   const isVideo = /\.(mp4|mov|avi|mkv|webm|3gp|flv|wmv)$/i.test(fileName || url);
 
-  // Pretvaranje Google Drive URL-a u izravni prikaz
-  let directUrl = url;
-  if (url.includes('drive.google.com') || url.includes('googleusercontent.com')) {
-    // Izvlačenje ID-a datoteke ako je u standardnom Drive formatu
-    const match = url.match(/[-\w]{25,}/);
-    if (match) {
-      const fileId = match[0];
-      directUrl = `https://lh3.googleusercontent.com/d/${fileId}`;
-    }
+  // Izvlačenje Google Drive ID-a
+  let fileId = '';
+  const match = url.match(/[-\w]{25,}/);
+  if (match) {
+    fileId = match[0];
   }
 
   if (isVideo) {
     const video = document.createElement('video');
-    video.src = directUrl;
+    video.src = fileId ? `https://drive.google.com/uc?export=download&id=${fileId}` : url;
     video.controls = true;
     video.playsInline = true;
     video.classList.add('preview-media');
     previewContainer.appendChild(video);
   } else {
     const img = document.createElement('img');
-    img.src = directUrl;
+    // Koristimo thumbnail pretpregled od Googlea za 100% stabilan prikaz bez CORS blokada
+    img.src = fileId ? `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000` : url;
     img.classList.add('preview-media');
-    
-    // Ako se slika ne uspije učitati preko CDN-a, probaj zamjenski link
-    img.onerror = () => {
-      const match = url.match(/[-\w]{25,}/);
-      if (match) {
-        img.src = `https://drive.google.com/thumbnail?id=${match[0]}&sz=w1000`;
-      }
-    };
-
+    img.alt = fileName || 'Mediji';
     previewContainer.appendChild(img);
   }
 }
+
 // 5. Automatsko učitavanje spremljenih slika i videa s Google Drivea
 async function loadSavedImages() {
   try {
@@ -153,6 +145,9 @@ async function loadSavedImages() {
     const result = await response.json();
 
     if (result.status === 'success' && result.files) {
+      // Očisti stari prikaz prije učitavanja
+      if (previewContainer) previewContainer.innerHTML = '';
+      
       for (const file of result.files) {
         displayMedia(file.url, file.name);
       }
