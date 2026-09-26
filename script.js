@@ -1,5 +1,5 @@
 // Ažurirani Google Apps Script Web App URL
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzHwQUvNKHks5s_jgjmVXCdFf_NGv7BFyhjmily7C_yyqfdKHlDDLn1PBSvoRueeT5L/exec';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbza0aBdwRot9YdGNpd42EuoRhj_jNjPiLXcN1X5AuXcJF-DB26ZUyXAG95XYy1zwM8/exec';
 
 const dropArea = document.getElementById('drop-area');
 const fileInput = document.getElementById('file-input');
