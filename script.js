@@ -109,6 +109,7 @@ async function handleFiles(files) {
 }
 
 // Prikaz slika ili videa ovisno o formatu
+// Prikaz slika ili videa ovisno o formatu
 function displayMedia(url, fileName = '') {
   if (!previewContainer) return;
 
@@ -122,18 +123,24 @@ function displayMedia(url, fileName = '') {
   }
 
   if (isVideo) {
-    const video = document.createElement('video');
-    video.src = fileId ? `https://drive.google.com/uc?export=download&id=${fileId}` : url;
-    video.controls = true;
-    video.playsInline = true;
-    video.classList.add('preview-media');
-    previewContainer.appendChild(video);
+    // Za videozapise koristimo Google Drive ugradbeni player (iframe) koji sigurno radi na svim uređajima
+    const iframe = document.createElement('iframe');
+    iframe.src = fileId 
+      ? `https://drive.google.com/file/d/${fileId}/preview` 
+      : url;
+    iframe.classList.add('preview-media');
+    iframe.style.width = '100%';
+    iframe.style.maxWidth = '400px';
+    iframe.style.height = '250px';
+    iframe.style.border = 'none';
+    iframe.allow = 'autoplay';
+    previewContainer.appendChild(iframe);
   } else {
     const img = document.createElement('img');
-    // Koristimo thumbnail pretpregled od Googlea za 100% stabilan prikaz bez CORS blokada
+    // Koristimo thumbnail pretpregled od Googlea za 100% stabilan prikaz slika
     img.src = fileId ? `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000` : url;
     img.classList.add('preview-media');
-    img.alt = fileName || 'Mediji';
+    img.alt = fileName || 'Slika';
     previewContainer.appendChild(img);
   }
 }
