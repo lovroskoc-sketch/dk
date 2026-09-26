@@ -5,9 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KETI I DOMI</title>
   <link rel="stylesheet" href="Projektcss.css">
-  
-  <!-- Supabase JS CDN -->
-	<script src="script.js?v=3"></script>
 </head>
 <body>
 
@@ -24,10 +21,11 @@
     Spusti sliku/videozapis ovdje ili klikni za odabir
   </div>
   
- <input type="file" id="file-input" multiple accept="image/*,video/*,.mp4,.mov,.avi,.mkv,.webm,.3gp" hidden>
+  <input type="file" id="file-input" multiple accept="image/*,video/*,.mp4,.mov,.avi,.mkv,.webm,.3gp" hidden>
   
   <div id="preview-container"></div>
 
-  <script src="script.js"></script>
+  <!-- Učitavanje skripte s cache-busting parametrom na samom dnu body-ja -->
+  <script src="script.js?v=4"></script>
 </body>
 </html>
