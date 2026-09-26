@@ -5,7 +5,7 @@ const dropArea = document.getElementById('drop-area');
 const fileInput = document.getElementById('file-input');
 const previewContainer = document.getElementById('preview-container');
 
-// 1. Potpuna blokada zadatog ponašanja preglednika (da ne otvara datoteku u novom tabu)
+// 1. Blokada zadatog ponašanja preglednika
 ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
   window.addEventListener(eventName, (e) => {
     e.preventDefault();
@@ -21,7 +21,6 @@ const previewContainer = document.getElementById('preview-container');
 });
 
 if (dropArea) {
-  // 2. Bojanje u limun-žutu (klasa drag-over iz Projektcss.css)
   ['dragenter', 'dragover'].forEach(eventName => {
     dropArea.addEventListener('dragenter', () => {
       dropArea.classList.add('drag-over');
@@ -34,7 +33,6 @@ if (dropArea) {
     }, false);
   });
 
-  // 3. Reagiranje na spuštanje datoteke (Drop)
   dropArea.addEventListener('drop', (e) => {
     const dt = e.dataTransfer;
     const files = dt.files;
@@ -43,7 +41,6 @@ if (dropArea) {
     }
   }, false);
 
-  // Klik za odabir datoteke
   dropArea.addEventListener('click', () => fileInput.click());
 }
 
@@ -55,7 +52,6 @@ if (fileInput) {
   });
 }
 
-// Pomoćna funkcija za pretvaranje datoteke u Base64 format
 function fileToBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -108,14 +104,15 @@ async function handleFiles(files) {
   }
 }
 
-// Prikaz slika ili videa ovisno o formatu
-// Prikaz slika ili videa ovisno o formatu
+// 5. Prikaz medija s pouzdanom detekcijom formata
 function displayMedia(url, fileName = '') {
   if (!previewContainer) return;
 
-  const isVideo = /\.(mp4|mov|avi|mkv|webm|3gp|flv|wmv)$/i.test(fileName || url);
+  // Provjera ekstenzije ili naziva datoteke
+  const isVideo = /\.(mp4|mov|avi|mkv|webm|3gp|flv|wmv)$/i.test(fileName) || 
+                  /\.(mp4|mov|avi|mkv|webm|3gp|flv|wmv)$/i.test(url) ||
+                  fileName.toLowerCase().includes('video');
 
-  // Izvlačenje Google Drive ID-a
   let fileId = '';
   const match = url.match(/[-\w]{25,}/);
   if (match) {
@@ -123,7 +120,7 @@ function displayMedia(url, fileName = '') {
   }
 
   if (isVideo) {
-    // Za videozapise koristimo Google Drive ugradbeni player (iframe) koji sigurno radi na svim uređajima
+    // Ako je video, ubacujemo Google Drive ugradbeni player
     const iframe = document.createElement('iframe');
     iframe.src = fileId 
       ? `https://drive.google.com/file/d/${fileId}/preview` 
@@ -133,26 +130,25 @@ function displayMedia(url, fileName = '') {
     iframe.style.maxWidth = '400px';
     iframe.style.height = '250px';
     iframe.style.border = 'none';
-    iframe.allow = 'autoplay';
+    iframe.setAttribute('allowfullscreen', 'true');
     previewContainer.appendChild(iframe);
   } else {
+    // Ako je slika, koristimo Google CDN thumbnail link
     const img = document.createElement('img');
-    // Koristimo thumbnail pretpregled od Googlea za 100% stabilan prikaz slika
     img.src = fileId ? `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000` : url;
     img.classList.add('preview-media');
-    img.alt = fileName || 'Slika';
+    img.alt = fileName || 'Medij';
     previewContainer.appendChild(img);
   }
 }
 
-// 5. Automatsko učitavanje spremljenih slika i videa s Google Drivea
+// 6. Učitavanje spremljenih datoteka
 async function loadSavedImages() {
   try {
     const response = await fetch(GOOGLE_SCRIPT_URL);
     const result = await response.json();
 
     if (result.status === 'success' && result.files) {
-      // Očisti stari prikaz prije učitavanja
       if (previewContainer) previewContainer.innerHTML = '';
       
       for (const file of result.files) {
