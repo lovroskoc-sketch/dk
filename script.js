@@ -108,7 +108,6 @@ async function handleFiles(files) {
 function displayMedia(url, fileName = '') {
   if (!previewContainer) return;
 
-  // Provjera ekstenzije ili naziva datoteke
   const isVideo = /\.(mp4|mov|avi|mkv|webm|3gp|flv|wmv)$/i.test(fileName) || 
                   /\.(mp4|mov|avi|mkv|webm|3gp|flv|wmv)$/i.test(url) ||
                   fileName.toLowerCase().includes('video');
@@ -120,20 +119,20 @@ function displayMedia(url, fileName = '') {
   }
 
   if (isVideo) {
-    // Ako je video, ubacujemo Google Drive ugradbeni player
+    // Google Drive iframe s dovoljnom visinom i omjerom 16:9 da kontrole ne budu odsječene
     const iframe = document.createElement('iframe');
     iframe.src = fileId 
       ? `https://drive.google.com/file/d/${fileId}/preview` 
       : url;
-    iframe.classList.add('preview-media');
+    iframe.classList.add('preview-media', 'video-embed');
     iframe.style.width = '100%';
     iframe.style.maxWidth = '400px';
-    iframe.style.height = '250px';
+    iframe.style.height = '280px';
     iframe.style.border = 'none';
     iframe.setAttribute('allowfullscreen', 'true');
     previewContainer.appendChild(iframe);
   } else {
-    // Ako je slika, koristimo Google CDN thumbnail link
+    // CDN prikaz slika
     const img = document.createElement('img');
     img.src = fileId ? `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000` : url;
     img.classList.add('preview-media');
